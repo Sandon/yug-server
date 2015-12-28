@@ -1,7 +1,6 @@
 exports = module.exports = {
     port: 80,
 	filters:[
-        //'host',
 		'rewrite'
 	],
 	hosts: {
