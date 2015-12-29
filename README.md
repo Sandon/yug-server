@@ -1,8 +1,14 @@
 # yug-server
+a local development server
+
+## Install
+` npm install -g yug-server `
 
 ## CLI
+**start** : ` sudo yug-server [options]`
+options is :
 
-## config
+## Config
 
     exports = module.exports = {
         port: 80,

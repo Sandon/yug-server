@@ -1,0 +1,29 @@
+{
+  "version": "0.0.1",
+  "name": "yug-server",
+  "description": "a local development server",
+  "bin": { "yug-server": "./bin/yug-server.js" },
+  "keywords": [
+    "server",
+    "development",
+    "tool"
+  ],
+  "dependencies": {
+    "nopt": "^3.0.6",
+    "koa": "^1.1.2",
+    "util": "^0.10.3",
+    "mime": "^1.3.4",
+    "serve-index": "^1.7.2",
+    "koa-send": "^3.1.0",
+    "mz": "2.1.0"
+  },
+  "author": "the_sandon@hotmail.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Sandon/yug-server.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Sandon/yug-server/issues"
+  },
+  "license": "MIT"
+}

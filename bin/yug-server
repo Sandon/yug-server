@@ -88,7 +88,7 @@ var Cluster = {
         }
 
         if ( !path ) {
-            throw new Error( '你的fdserver目录里没有config.js' );
+            throw new Error( 'config.js does not exist' );
         }
 
         var watcher = fs.watch( path );
@@ -116,7 +116,7 @@ var Server = {
             if ( fs.existsSync( defaultConfigPath ) ) {
                 config = require( defaultConfigPath );
             } else {
-                throw new Error( '你的fdserver目录里没有config.js' );
+                throw new Error( 'config.js does not exist' );
             }
         }
 
