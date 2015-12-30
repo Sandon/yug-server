@@ -4,6 +4,7 @@ var util = require( 'util' ),
     Path = require( 'path' ),
     fs = require( 'fs' ),
     cluster = require( 'cluster' ),
+    shell = require( 'shelljs' ),
     utils = require( '../lib/utils' );
 
 var nopt = require( 'nopt' );
@@ -32,6 +33,9 @@ var configFile = parsed.configfile ? parsed.configfile : '';
 var pidFile = parsed.pidfile ? parsed.pidfile : '';
 var serverPidFile = pidFile ? Path.resolve( pidFile ) : Path.join( __dirname, '../run/app.pid' );
 var PID = null;
+var CONFIG_DIR = 'yug-config';
+var CONGIF_FILENAME = 'server.config.js';
+var defaultConfigPath = getDefaultConfigPath();
 
 if ( parsed.help ) {
     p( _help() );
@@ -63,7 +67,7 @@ var Cluster = {
         var os = require( 'os' ),
             count = os.cpus().length;
 
-        for ( var i = 0; i < 1; i++ ) {
+        for ( var i = 0; i < count; i++ ) {
             cluster.fork();
         }
 
@@ -74,7 +78,6 @@ var Cluster = {
 
     _watch: function() {
         var self = this;
-        var defaultConfigPath = Util.getPath( 'config.js' );
         var path = '';
 
         if ( configFile ) {
@@ -105,7 +108,6 @@ var Cluster = {
 var Server = {
     start: function() {
         var server = require( '../lib/server' );
-        var defaultConfigPath = Util.getPath( 'config.js' );
         var config = {};
 
         if ( configFile ) {
@@ -137,15 +139,11 @@ var Server = {
                 .on( 'error', function(e) {
                     util.error(e);
                 } );
-
-            util.log( 'create server: ' + sslport || 443 );
         }
 
-        app.listen(config.port).on( 'error', function(e) {
+        app.listen( config.port ).on( 'error', function(e) {
             util.error(e);
         });
-
-        util.log( 'create server: ' + config.port );
     },
 
     prepare: function( config ) {
@@ -161,9 +159,19 @@ var Server = {
     }
 };
 
+function getDefaultConfigPath () {
+    var home =  process.env[ process.platform == 'win32' ? 'USERPROFILE' : 'HOME' ];
+    home = Path.resolve( home, CONFIG_DIR );
+    if ( !fs.existsSync( home ) ) {
+        shell.mkdir( '-p', home );
+        shell.cp( '', Path.resolve( __dirname, '../' + CONGIF_FILENAME ), home );
+    }
+    return Path.resolve( home, CONGIF_FILENAME );
+}
+
 function _help() {
     return [
-        ' Usage: ./fdserver',
+        ' Usage: sudo yug-server [options]',
         '',
         ' Options:',
         '',
