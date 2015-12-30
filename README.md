@@ -11,10 +11,10 @@ options is :
 
 |   option              |     meaning                        |
 | --------------------- | ---------------------------------- |
-|   -d   / --debug      |     [option] enable debug mode',   |
-|   -p   / --port       |     [option] port num',            |
-|   -cf  / --configfile |     [option] path to config file', |
-|   -h   / --help       |     [option] help information'     |
+|   -d   / --debug      |     [option] enable debug mode     |
+|   -p   / --port       |     [option] port num              |
+|   -cf  / --configfile |     [option] path to config file   |
+|   -h   / --help       |     [option] help information      |
 
 
 ## Config
