@@ -4,11 +4,19 @@ a local development server
 ## Install
 ` npm install -g yug-server `
 
-## CLI
+## CLI Command
 **start** : ` sudo yug-server [options]`
+
 options is :
+|   -d   / --debug      |     [option] enable debug mode',
+|   -p   / --port       |     [option] port num',
+|   -cf  / --configfile |     [option] path to config file',
+|   -h   / --help       |     [option] help information'
+
 
 ## Config
+path of the config file is ` ~/yug-config/server.config.js `.
+config content as :
 
     exports = module.exports = {
         port: 80,
