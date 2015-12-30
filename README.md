@@ -8,6 +8,7 @@ a local development server
 **start** : ` sudo yug-server [options]`
 
 options is :
+
 |   option              |     meaning                        |
 | --------------------- | ---------------------------------- |
 |   -d   / --debug      |     [option] enable debug mode',   |
