@@ -7,7 +7,7 @@ a local development server
 ## CLI Command
 **start** : ` sudo yug-server [options]`
 
-options is :
+options are :
 
 | option              | meaning                      |
 | ------------------- | ---------------------------- |

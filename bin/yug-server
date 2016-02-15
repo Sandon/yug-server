@@ -130,8 +130,8 @@ var Server = {
         if ( sslport ) {
             var https = require( 'https' );
             var httpsOpt = {
-                key: fs.readFileSync( Path.join( __dirname, '../cert/neat.key' ) ),
-                cert: fs.readFileSync( Path.join( __dirname, '../cert/neat.crt' ) )
+                key: fs.readFileSync( Path.join( __dirname, '../cert/yug.key' ) ),
+                cert: fs.readFileSync( Path.join( __dirname, '../cert/yug.crt' ) )
             };
 
             https.createServer( httpsOpt, config.koa ? app.callback : app )
