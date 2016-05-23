@@ -1,8 +1,11 @@
 {
-  "version": "0.0.7",
+  "version": "0.0.8",
   "name": "yug-server",
   "description": "a local development server",
   "bin": { "yug-server": "./bin/yug-server" },
+  "scripts": {
+    "start": "node bin/yug-server"
+  },
   "keywords": [
     "server",
     "development",
