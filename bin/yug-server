@@ -1,28 +1,28 @@
 #!/usr/bin/env node
 
 var util = require( 'util' ),
-    Path = require( 'path' ),
-    fs = require( 'fs' ),
-    cluster = require( 'cluster' ),
-    shell = require( 'shelljs' ),
-    utils = require( '../lib/utils' );
+  Path = require( 'path' ),
+  fs = require( 'fs' ),
+  cluster = require( 'cluster' ),
+  shell = require( 'shelljs' ),
+  utils = require( '../lib/utils' );
 
 var nopt = require( 'nopt' );
 
 var knownOpts = {
-    'configfile': String,
-    'pidfile': String,
-    'debug': Boolean,
-    'port': Number,
-    'help': Boolean
+  'configfile': String,
+  'pidfile': String,
+  'debug': Boolean,
+  'port': Number,
+  'help': Boolean
 };
 
 var shortHands = {
-    'p': [ '--port' ],
-    'd': [ '--debug' ],
-    'cf': [ '--configfile' ],
-    'pf': [ '--pidfile' ],
-    'h': [ '--help' ]
+  'p': [ '--port' ],
+  'd': [ '--debug' ],
+  'cf': [ '--configfile' ],
+  'pf': [ '--pidfile' ],
+  'h': [ '--help' ]
 };
 
 var parsed = nopt( knownOpts, shortHands, process.argv );
@@ -38,166 +38,174 @@ var CONGIF_FILENAME = 'server.config.js';
 var defaultConfigPath = getDefaultConfigPath();
 
 if ( parsed.help ) {
-    p( _help() );
-    return;
+  p( _help() );
+  return;
 }
 
 util.debug = debug ? console.log : function() {
 };
 
 var Util = {
-    getPath: function( path ) {
-        return Path.normalize( Path.join( __dirname, '../' + path ) );
-    }
+  getPath: function( path ) {
+    return Path.normalize( Path.join( __dirname, '../' + path ) );
+  }
 };
 
 var Cluster = {
-    start: function() {
-        this._start();
-        this._watch();
-    },
+  start: function() {
+    this._start();
+    this._watch();
+  },
 
-    _start: function () {
-        console.log( 'pid is ->', PID );
+  _start: function () {
+    console.log( 'pid is ->', PID );
 
-        for ( var id in cluster.workers ) {
-            cluster.workers[ id ].kill();
-        }
-
-        var os = require( 'os' ),
-            count = os.cpus().length;
-
-        for ( var i = 0; i < count; i++ ) {
-            cluster.fork();
-        }
-
-        cluster.on( 'exit', function ( worker ) {
-            util.log( 'worker ' + worker.process.pid + ' died' );
-        });
-    },
-
-    _watch: function() {
-        var self = this;
-        var path = '';
-
-        if ( configFile ) {
-            if ( fs.existsSync( configFile ) ) {
-                path = configFile;
-            }
-        } else {
-            if ( fs.existsSync( defaultConfigPath ) ) {
-                path = defaultConfigPath;
-            }
-        }
-
-        if ( !path ) {
-            throw new Error( 'config.js does not exist' );
-        }
-
-        var watcher = fs.watch( path );
-
-        watcher.on( 'change', function() {
-            utils.schedule( 'start-cluster', function () {
-                self._start();
-            }, 2000 );
-        });
+    for ( var id in cluster.workers ) {
+      cluster.workers[ id ].kill();
     }
+
+    var os = require( 'os' ),
+      count = os.cpus().length;
+
+    for ( var i = 0; i < count; i++ ) {
+      cluster.fork();
+    }
+
+    cluster.on( 'exit', function ( worker ) {
+      util.log( 'worker ' + worker.process.pid + ' died' );
+    });
+  },
+
+  _watch: function() {
+    var self = this;
+    var path = '';
+
+    if ( configFile ) {
+      if ( fs.existsSync( configFile ) ) {
+        path = configFile;
+      }
+    } else {
+      if ( fs.existsSync( defaultConfigPath ) ) {
+        path = defaultConfigPath;
+      }
+    }
+
+    if ( !path ) {
+      throw new Error( 'config.js does not exist' );
+    }
+
+    var watcher = fs.watch( path );
+
+    watcher.on( 'change', function() {
+      utils.schedule( 'start-cluster', function () {
+        self._start();
+      }, 2000 );
+    });
+  }
 
 };
 
 var Server = {
-    start: function() {
-        var server = require( '../lib/server' );
-        var config = {};
+  start: function() {
+    var server = require( '../lib/server' );
+    var config = {};
 
-        if ( configFile ) {
-            if ( fs.existsSync( configFile ) ) {
-                config = require( configFile );
-            }
-        } else {
-            if ( fs.existsSync( defaultConfigPath ) ) {
-                config = require( defaultConfigPath );
-            } else {
-                throw new Error( 'config.js does not exist' );
-            }
-        }
-
-        config = this.prepare( config );
-
-        var sslport = config.sslport;
-        var app = server( config );
-
-        if ( sslport ) {
-            var https = require( 'https' );
-            var httpsOpt = {
-                key: fs.readFileSync( Path.join( __dirname, '../cert/yug.key' ) ),
-                cert: fs.readFileSync( Path.join( __dirname, '../cert/yug.crt' ) )
-            };
-
-            https.createServer( httpsOpt, config.koa ? app.callback : app )
-                .listen( sslport || 443 )
-                .on( 'error', function(e) {
-                    util.error(e);
-                } );
-        }
-
-        app.listen( config.port ).on( 'error', function(e) {
-            util.error(e);
-        });
-    },
-
-    prepare: function( config ) {
-        var port = parsed.port;
-
-        if ( port ) {
-            config.port = port;
-        }
-
-        debug && ( config.debug = true );
-
-        return config;
+    if ( configFile ) {
+      if ( fs.existsSync( configFile ) ) {
+        config = require( configFile );
+      }
+    } else {
+      if ( fs.existsSync( defaultConfigPath ) ) {
+        config = require( defaultConfigPath );
+      } else {
+        throw new Error( 'config.js does not exist' );
+      }
     }
+
+    config = this.prepare( config );
+
+    var sslport = config.sslport;
+    var app = server( config );
+
+    if ( sslport ) {
+      var https = require('https');
+      var httpsOpt = {
+        key: fs.readFileSync( Path.join(__dirname, '../cert/server-key.pem') ),
+        cert: fs.readFileSync( Path.join(__dirname, '../cert/server-cert.pem') ),
+        ca: [fs.readFileSync( Path.join(__dirname, '../cert/ca-cert.pem') )]
+        /*ca: [fs.readFileSync('./keys/ca-cert.pem')]*/
+      };
+
+      /*https.createServer( httpsOpt, config.koa ? app.callback : app )*/
+      https.createServer(httpsOpt, app.callback())
+        .listen( sslport || 443 )
+        .on( 'error', function(e) {
+          util.error(e);
+        });
+
+      /*https.createServer(httpsOpt, (req, res) => {
+        res.writeHead(200);
+        res.end('hello world xx\n');
+      }).listen(443);*/
+    }
+
+    app.listen( config.port ).on( 'error', function(e) {
+      util.error(e);
+    });
+  },
+
+  prepare: function( config ) {
+    var port = parsed.port;
+
+    if ( port ) {
+      config.port = port;
+    }
+
+    debug && ( config.debug = true );
+
+    return config;
+  }
 };
 
 function getDefaultConfigPath () {
-    var home =  process.env[ process.platform == 'win32' ? 'USERPROFILE' : 'HOME' ];
-    home = Path.resolve( home, CONFIG_DIR );
-    if ( !fs.existsSync( home ) ) {
-        shell.mkdir( '-p', home );
-        shell.cp( '', Path.resolve( __dirname, '../' + CONGIF_FILENAME ), home );
-    }
-    return Path.resolve( home, CONGIF_FILENAME );
+  var home =  process.env[ process.platform == 'win32' ? 'USERPROFILE' : 'HOME' ];
+  home = Path.resolve( home, CONFIG_DIR );
+  if ( !fs.existsSync( home ) ) {
+    shell.mkdir( '-p', home );
+    shell.cp( '', Path.resolve( __dirname, '../' + CONGIF_FILENAME ), home );
+  }
+  return Path.resolve( home, CONGIF_FILENAME );
 }
 
 function _help() {
-    return [
-        ' Usage: sudo yug-server [options]',
-        '',
-        ' Options:',
-        '',
-        '   -d   | --debug           [option] enable debug mode',
-        '   -p   | --port            [option] port num',
-        '   -cf  | --configfile      [option] path to config file',
-        '   -h   | --help            [option] help information'
-    ].join('\n');
+  return [
+    ' Usage: sudo yug-server [options]',
+    '',
+    ' Options:',
+    '',
+    '   -d   | --debug           [option] enable debug mode',
+    '   -p   | --port            [option] port num',
+    '   -cf  | --configfile      [option] path to config file',
+    '   -h   | --help            [option] help information'
+  ].join('\n');
 }
 
 function p() {
-    console.log.apply( console, arguments );
+  console.log.apply( console, arguments );
 }
 
 if ( cluster.isMaster ) {
-    PID = process.pid;
-    fs.writeFileSync( serverPidFile, PID );
+  PID = process.pid;
+  fs.writeFileSync( serverPidFile, PID );
 }
 
 if ( !debug && cluster.isMaster ) {
-    Cluster.start();
+  Cluster.start();
 } else {
-    Server.start();
+  Server.start();
 }
 
 process.on( 'SIGTERM', function () {
-    console.log( 'sigterm ...' );
-    process.exit( 0 );
+  console.log( 'sigterm ...' );
+  process.exit( 0 );
 });

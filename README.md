@@ -54,3 +54,14 @@ config content as :
     	}
     };
 
+
+## https
+The yug-server supports https using self signed certificate.
+
+You can change the cert that yug-server uses in 'cert' folder of the yug-server project.
+
+So, when you are visiting urls that rewrited by yug-server, you will be blocked by the browser and get warnings.
+You just need to ignore the warnings to go on.
+
+Some urls that you are visiting are not abviously block by browser, like urls of CSS/JS files in Link/Script tag.
+In order to visit these urls, you should manually enter the domains in the browser address bar before you visiting these domains.

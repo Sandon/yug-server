@@ -1,2 +1,3 @@
 .idea/
-./run/app.pid
+run/
+run/app.pid
