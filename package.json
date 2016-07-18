@@ -1,5 +1,5 @@
 {
-  "version": "0.0.11",
+  "version": "0.0.12",
   "name": "yug-server",
   "description": "a local development server",
   "bin": { "yug-server": "./bin/yug-server" },
