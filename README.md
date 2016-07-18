@@ -24,6 +24,7 @@ config content as :
 
     exports = module.exports = {
         port: 80,
+        sslport: 443,
     	middlewares:[
     		'rewrite'
     	],
@@ -58,10 +59,10 @@ config content as :
 ## Https
 The yug-server supports https using self signed certificate.
 
-So, when you are visiting urls that rewrited by yug-server, you will be blocked by the browser and get warnings.
+So, when you are visiting urls that rewritten by yug-server, you will be blocked by the browser and get warnings.
 You just need to ignore the warnings to go on.
 
-Some urls that you are visiting are not abviously block by browser, like urls of CSS/JS files in Link/Script tag.
+Some urls that you are visiting are not obviously block by browser, like urls of CSS/JS files in Link/Script tag.
 In order to visit these urls, you should manually enter the domains in the browser address bar before you visiting these domains.
 
 You can change the cert that yug-server uses in 'cert' folder of the yug-server project.

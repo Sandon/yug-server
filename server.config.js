@@ -1,5 +1,6 @@
 exports = module.exports = {
   port: 80,
+  sslport: 443,
   middlewares:[
 		'rewrite'
 	],

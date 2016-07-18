@@ -133,20 +133,13 @@ var Server = {
         key: fs.readFileSync( Path.join(__dirname, '../cert/server-key.pem') ),
         cert: fs.readFileSync( Path.join(__dirname, '../cert/server-cert.pem') ),
         ca: [fs.readFileSync( Path.join(__dirname, '../cert/ca-cert.pem') )]
-        /*ca: [fs.readFileSync('./keys/ca-cert.pem')]*/
       };
 
-      /*https.createServer( httpsOpt, config.koa ? app.callback : app )*/
       https.createServer(httpsOpt, app.callback())
         .listen( sslport || 443 )
         .on( 'error', function(e) {
           util.error(e);
         });
-
-      /*https.createServer(httpsOpt, (req, res) => {
-        res.writeHead(200);
-        res.end('hello world xx\n');
-      }).listen(443);*/
     }
 
     app.listen( config.port ).on( 'error', function(e) {
