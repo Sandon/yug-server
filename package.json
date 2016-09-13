@@ -1,8 +1,10 @@
 {
-  "version": "0.0.14",
+  "version": "0.0.15",
   "name": "yug-server",
   "description": "a local development server",
-  "bin": { "yug-server": "./bin/yug-server" },
+  "bin": {
+    "yug-server": "./bin/yug-server"
+  },
   "scripts": {
     "start": "node bin/yug-server"
   },
@@ -13,14 +15,15 @@
   ],
   "preferGlobal": true,
   "dependencies": {
-    "nopt": "^3.0.6",
     "koa": "^1.1.2",
-    "util": "^0.10.3",
-    "mime": "^1.3.4",
-    "serve-index": "^1.7.2",
     "koa-send": "^3.1.0",
+    "mime": "^1.3.4",
     "mz": "^2.1.0",
-    "shelljs": "^0.5.3"
+    "nopt": "^3.0.6",
+    "raw-body": "^2.1.7",
+    "serve-index": "^1.7.2",
+    "shelljs": "^0.5.3",
+    "util": "^0.10.3"
   },
   "author": "the_sandon@hotmail.com",
   "repository": {
