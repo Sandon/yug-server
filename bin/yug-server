@@ -66,8 +66,8 @@ var Cluster = {
 
     var os = require( 'os' ),
       count = os.cpus().length;
-
-    for ( var i = 0; i < count; i++ ) {
+    // count
+    for ( var i = 0; i < 1; i++ ) {
       cluster.fork();
     }
 
@@ -122,12 +122,12 @@ var Server = {
       }
     }
 
-    config = this.prepare( config );
+    config = this.prepare(config)
 
-    var sslport = config.sslport;
-    var app = server( config );
+    var sslport = config.sslport
+    var app = server(config)
 
-    if ( sslport ) {
+    if (sslport) {
       var https = require('https');
       var httpsOpt = {
         key: fs.readFileSync( Path.join(__dirname, '../cert/server-key.pem') ),
@@ -187,7 +187,7 @@ function p() {
   console.log.apply( console, arguments );
 }
 
-if ( cluster.isMaster ) {
+if (cluster.isMaster) {
   PID = process.pid;
   fs.writeFileSync( serverPidFile, PID );
 }
@@ -198,7 +198,7 @@ if ( !debug && cluster.isMaster ) {
   Server.start();
 }
 
-process.on( 'SIGTERM', function () {
-  console.log( 'sigterm ...' );
-  process.exit( 0 );
+process.on('SIGTERM', function () {
+  console.log('sigterm ...');
+  process.exit(0);
 });

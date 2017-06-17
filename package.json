@@ -15,12 +15,14 @@
   ],
   "preferGlobal": true,
   "dependencies": {
-    "koa": "^1.1.2",
+    "handlebars": "^4.0.10",
+    "koa": "^2.2.0",
     "koa-send": "^3.1.0",
     "mime": "^1.3.4",
     "mz": "^2.1.0",
     "nopt": "^3.0.6",
     "raw-body": "^2.1.7",
+    "request": "^2.81.0",
     "serve-index": "^1.7.2",
     "shelljs": "^0.5.3",
     "util": "^0.10.3"
