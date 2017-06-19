@@ -10,7 +10,8 @@ ctx.state.yugReqUrls = [
     'req': {
       'url': 'url',
       'path': 'path',
-      'host': 'host'
+      'host': 'host',
+      'charset': 'charset'
     },
     'res': {
       'header': 'header',
