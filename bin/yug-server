@@ -1,29 +1,28 @@
 #!/usr/bin/env node
 
-var util = require( 'util' ),
-  Path = require( 'path' ),
-  fs = require( 'fs' ),
-  cluster = require( 'cluster' ),
-  shell = require( 'shelljs' ),
-  utils = require( '../lib/utils' );
+const util = require('util')
+const Path = require('path')
+const fs = require('fs')
+const cluster = require('cluster')
+const shell = require('shelljs')
+const utils = require('../lib/utils')
+const nopt = require('nopt')
 
-var nopt = require( 'nopt' );
-
-var knownOpts = {
+const knownOpts = {
   'configfile': String,
   'pidfile': String,
   'debug': Boolean,
   'port': Number,
   'help': Boolean
-};
+}
 
-var shortHands = {
+const shortHands = {
   'p': [ '--port' ],
   'd': [ '--debug' ],
   'cf': [ '--configfile' ],
   'pf': [ '--pidfile' ],
   'h': [ '--help' ]
-};
+}
 
 var parsed = nopt( knownOpts, shortHands, process.argv );
 

@@ -1,19 +1,19 @@
 exports = module.exports = {
   port: 80,
   sslport: 443,
-  middlewares:[
-		'rewrite'
-	],
-	hosts: {
-		// simple host
-		'www.demo.com': {
-			root: '/Users/Sandon/WebstormProjects/'
-		},
+  middlewares: [
+    'rewrite'
+  ],
+  hosts: {
+    // simple host
+    'www.demo.com': {
+      root: '/Users/Sandon/WebstormProjects/'
+    },
 
-		// rewrite
-		'www.styledemo.com': {
-			root: '/Users/Sandon/WebstormProjects/',
-			rewrite: [
+    // rewrite
+    'www.styledemo.com': {
+      root: '/Users/Sandon/WebstormProjects/',
+      rewrite: [
         {
           from: /^\/yugserverrewrite\/(.*)$/,
           to: 'mine/yug-server/test/$1'
@@ -27,7 +27,6 @@ exports = module.exports = {
           to: 'http://42.156.140.62$1'
         }
       ]
-		}
-	}
-};
-
+    }
+  }
+}
