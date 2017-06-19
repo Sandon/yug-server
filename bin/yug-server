@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 const util = require('util')
-const Path = require('path')
+const path = require('path')
 const fs = require('fs')
 const cluster = require('cluster')
 const shell = require('shelljs')
@@ -12,12 +12,12 @@ const CONFIG_DIR = 'yug-config'
 const CONGIF_FILENAME = 'server.config.js'
 const defaultConfigPath = (function () {
   let home =  process.env[ process.platform == 'win32' ? 'USERPROFILE' : 'HOME' ]
-  home = Path.resolve(home, CONFIG_DIR)
+  home = path.resolve(home, CONFIG_DIR)
   if ( !fs.existsSync(home) ) {
     shell.mkdir( '-p', home )
-    shell.cp('', Path.resolve( __dirname, '../' + CONGIF_FILENAME ), home)
+    shell.cp('', path.resolve( __dirname, '../' + CONGIF_FILENAME ), home)
   }
-  return Path.resolve( home, CONGIF_FILENAME )
+  return path.resolve( home, CONGIF_FILENAME )
 })()
 
 const knownOpts = {
@@ -38,7 +38,7 @@ const shortHands = {
 let parsed = nopt(knownOpts, shortHands, process.argv)
 let debug = parsed.debug
 let configFile = parsed.configfile || defaultConfigPath
-let serverPidFile = parsed.pidfile ? Path.resolve( parsed.pidfile ) : Path.join( __dirname, '../run/app.pid' )
+let serverPidFile = parsed.pidfile ? path.resolve( parsed.pidfile ) : path.join( __dirname, '../run/app.pid' )
 let PID = null
 
 if (parsed.help) {
@@ -108,9 +108,9 @@ var Server = {
     if (config.sslport) {
       const https = require('https')
       const httpsOpt = {
-        key: fs.readFileSync( Path.join(__dirname, '../cert/server-key.pem') ),
-        cert: fs.readFileSync( Path.join(__dirname, '../cert/server-cert.pem') ),
-        ca: [fs.readFileSync( Path.join(__dirname, '../cert/ca-cert.pem') )]
+        key: fs.readFileSync( path.join(__dirname, '../cert/server-key.pem') ),
+        cert: fs.readFileSync( path.join(__dirname, '../cert/server-cert.pem') ),
+        ca: [fs.readFileSync( path.join(__dirname, '../cert/ca-cert.pem') )]
       };
       
       https.createServer(httpsOpt, app.callback())
