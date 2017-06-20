@@ -2,6 +2,7 @@ exports = module.exports = {
   port: 80,
   sslport: 443,
   middlewares: [
+    'combo',
     'rewrite'
   ],
   hosts: {

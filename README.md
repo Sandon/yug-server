@@ -1,11 +1,11 @@
 # yug-server
-a local development server
+a local development server (combo and rewrite http requests to local files or remote server)
 
 ## Install
 ` npm install -g yug-server `
 
 ## CLI Command
-**start** : ` sudo yug-server [options]`
+**start** : ` sudo yug [options]`
 
 options are :
 
@@ -66,3 +66,6 @@ Some urls that you are visiting are not obviously block by browser, like urls of
 In order to visit these urls, you should manually enter the domains in the browser address bar before you visiting these domains.
 
 You can change the cert that yug-server uses in 'cert' folder of the yug-server project.
+
+## Combo URL
+Support combo url like: `https://www.demo.com/??path1/file1.js,path2/file2.js`
