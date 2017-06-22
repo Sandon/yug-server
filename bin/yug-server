@@ -1,13 +1,25 @@
 #!/usr/bin/env node
 
-const util = require('util')
+const nopt = require('nopt')
 const path = require('path')
 const fs = require('fs')
-const cluster = require('cluster')
-const shell = require('shelljs')
-const utils = require('../lib/utils')
-const nopt = require('nopt')
+const version = require('../package.json').version
+const lifeCircle = require('../lib/life-circle')
 
+/* 1. construct options from the command line parameters */
+const knownOpts = {
+  'configFile': String,
+  'force': Boolean,
+  'help': Boolean,
+  'version': Boolean
+}
+const shortHands = {
+  'cf': ['--configFile'],
+  'f': ['--force'],
+  'h': ['--help'],
+  'v': ['--version']
+}
+const options = nopt(knownOpts, shortHands, process.argv)
 const CONFIG_DIR = 'yug-config'
 const CONGIF_FILENAME = 'server.config.js'
 const defaultConfigPath = (function () {
@@ -20,125 +32,53 @@ const defaultConfigPath = (function () {
   return path.resolve( home, CONGIF_FILENAME )
 })()
 
-const knownOpts = {
-  'configfile': String,
-  'pidfile': String,
-  'debug': Boolean,
-  'port': Number,
-  'help': Boolean
-}
-const shortHands = {
-  'p': [ '--port' ],
-  'd': [ '--debug' ],
-  'cf': [ '--configfile' ],
-  'pf': [ '--pidfile' ],
-  'h': [ '--help' ]
-}
+// these can be pass to child process through spawn
+process.env.configFile = options.configFile || defaultConfigPath
 
-let parsed = nopt(knownOpts, shortHands, process.argv)
-let debug = parsed.debug
-let configFile = parsed.configfile || defaultConfigPath
-let serverPidFile = parsed.pidfile ? path.resolve( parsed.pidfile ) : path.join( __dirname, '../run/app.pid' )
-let PID = null
-
-if (parsed.help) {
+/* 2. handle the command */
+if (options.help) {
   console.log([
-    ' Usage: sudo yug-server [options]',
+    ` Version: ${version}`,
+    ' Usage: sudo yug [options]',
     '',
     ' Options:',
     '',
-    '   -d   | --debug           [option] enable debug mode',
-    '   -p   | --port            [option] port num',
     '   -cf  | --configfile      [option] path to config file',
-    '   -h   | --help            [option] help information'
+    '   -f   | --force           [option] force start',
+    '   -h   | --help            [option] help information',
+    '   -v   | --version         [option] version'
   ].join('\n'))
   return
 }
-
-var Cluster = {
-  start: function() {
-    this._start()
-    this._watch()
-  },
-  
-  _start: function () {
-    console.log( 'pid is ->', PID )
-    
-    for ( var id in cluster.workers ) {
-      cluster.workers[id].kill()
-    }
-    
-    const os = require( 'os' )
-    const count = os.cpus().length
-    for (var i = 0; i < count; i++) {
-      cluster.fork()
-    }
-    
-    cluster.on( 'exit', function ( worker ) {
-      util.log( 'worker ' + worker.process.pid + ' died' )
-    })
-  },
-  
-  _watch: function() {
-    let self = this
-    
-    if (!fs.existsSync(configFile)) {
-      throw new Error( `config file '${configFile}' does not exist` )
-    }
-    
-    const watcher = fs.watch(configFile)
-    watcher.on('change', function () {
-      utils.schedule( 'start-cluster', function () {
-        self._start()
-      }, 2000)
-    })
-  }
-  
+if (options.version) {
+  console.log(` Version: ${version}`)
+  return
 }
-
-var Server = {
-  start: function() {
-    const config = require(configFile)
-    config.port = parsed.port || config.port
-    config.debug = debug || config.debug
-    
-    const server = require('../lib/server')
-    const app = server(config)
-    
-    if (config.sslport) {
-      const https = require('https')
-      const httpsOpt = {
-        key: fs.readFileSync( path.join(__dirname, '../cert/server-key.pem') ),
-        cert: fs.readFileSync( path.join(__dirname, '../cert/server-cert.pem') ),
-        ca: [fs.readFileSync( path.join(__dirname, '../cert/ca-cert.pem') )]
-      };
-      
-      https.createServer(httpsOpt, app.callback())
-        .listen( config.sslport || 443 )
-        .on( 'error', function(e) {
-          util.error(e)
-        })
-    }
-    
-    app.listen(config.port).on('error', function(e) {
-      util.error(e)
-    })
-  }
-}
-
-if (cluster.isMaster) {
-  PID = process.pid
-  fs.writeFileSync(serverPidFile, PID)
-}
-
-if (!debug && cluster.isMaster) {
-  Cluster.start()
-} else {
-  Server.start()
+const notShellMode = process.argv[2] !== 'start' && process.argv[2] !== 'start' &&
+  process.argv[2] !== 'start' && process.argv[2] !== 'start'
+switch (process.argv[2]) {
+  case 'start':
+    lifeCircle.start(options.force)
+    break
+  case 'restart':
+    lifeCircle.restart()
+    break
+  case 'stop':
+    lifeCircle.stop()
+    break
+  case 'status':
+    lifeCircle.status()
+    break
+  default:
+    lifeCircle.startNotShell()
+    break
 }
 
 process.on('SIGTERM', function () {
   console.log('sigterm ...')
-  process.exit(0);
+  process.exit(0)
 })
-
+process.on('exit', (code) => {
+})
+process.on('beforeExit', () => {
+})

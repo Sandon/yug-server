@@ -1,5 +1,5 @@
 # yug-server
-a local development server (combo and rewrite http requests to local files or remote server)
+a local development server (combo and rewrite http requests to local files or remote servers)
 
 ## Install
 ` npm install -g yug-server `
