@@ -32,7 +32,9 @@ config content as :
     exports = module.exports = {
         port: 80,
         sslport: 443,
+        debug: true,
     	middlewares:[
+    	    'combo',
     		'rewrite'
     	],
     	hosts: {
