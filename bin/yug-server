@@ -54,8 +54,8 @@ if (options.version) {
   console.log(` Version: ${version}`)
   return
 }
-const notShellMode = process.argv[2] !== 'start' && process.argv[2] !== 'start' &&
-  process.argv[2] !== 'start' && process.argv[2] !== 'start'
+// const notShellMode = process.argv[2] !== 'start' && process.argv[2] !== 'start' &&
+// process.argv[2] !== 'start' && process.argv[2] !== 'start'
 switch (process.argv[2]) {
   case 'start':
     lifeCircle.start(options.force)
