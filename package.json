@@ -39,7 +39,8 @@
   },
   "standard": {
     "ignore": [
-      "**/**.deprecated.js"
+      "**/**.deprecated.js",
+      "**/**.backup.js"
     ]
   }
 }
