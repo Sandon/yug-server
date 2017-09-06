@@ -1,7 +1,10 @@
 exports = module.exports = {
-  port: 80,
-  sslport: 443,
+  port: 80, // port for http
+  sslport: 443, // port for https
   debug: true,
+  key: '', // path of key file for https which is passed to https.createServer, default is 'cert/server-key.pem'
+  cert: '', // path of cert file for https which is passed to https.createServer, default is 'cert/server-cert.pem'
+  ca: '', // path of ca file for https which is passed to https.createServer, default is 'cert/ca-cert.pem'
   middlewares: [
     'combo',
     'rewrite'
