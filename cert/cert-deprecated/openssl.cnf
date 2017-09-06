@@ -6,12 +6,12 @@
     countryName = Country Name (2 letter code)  
     countryName_default = CN  
     stateOrProvinceName = State or Province Name (full name)  
-    stateOrProvinceName_default = ZheJiang
+    stateOrProvinceName_default = BeiJing  
     localityName = Locality Name (eg, city)  
-    localityName_default = HangZhou
+    localityName_default = YaYunCun  
     organizationalUnitName  = Organizational Unit Name (eg, section)  
-    organizationalUnitName_default  = Yug Server
-    commonName = YugServer
+    organizationalUnitName_default  = Domain Control Validated  
+    commonName = Internet Widgits Ltd  
     commonName_max  = 64  
   
     [ v3_req ]  
@@ -20,21 +20,6 @@
     keyUsage = nonRepudiation, digitalSignature, keyEncipherment  
     subjectAltName = @alt_names  
   
-    [alt_names]
-    DNS.1       = demo.com
-    DNS.2       = www.demo.com
-    DNS.3       = wuage.com
-    DNS.4       = www.wuage.com
-    DNS.5       = example.com
-    DNS.6       = www.example.com
-
-    DNS.7       = localhost
-    DNS.8       = 127.0.0.1
-
-    DNS.9     = ::1
-
-    # for chrome
-    # IPv4 localhost
+    [alt_names]  
+    #注意这个IP.1的设置，IP地址需要和你的服务器的监听地址一样
     IP.1 = 127.0.0.1
-    # IPv6 localhost
-    IP.2     = ::1
