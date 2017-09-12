@@ -22,11 +22,11 @@
   
     [alt_names]
     DNS.1       = demo.com
-    DNS.2       = www.demo.com
+    DNS.2       = *.demo.com
     DNS.3       = wuage.com
-    DNS.4       = www.wuage.com
-    DNS.5       = example.com
-    DNS.6       = www.example.com
+    DNS.4       = *.wuage.com
+    DNS.5       = *.wuage-inc.com
+    DNS.6       = *.styledemo.com
 
     DNS.7       = localhost
     DNS.8       = 127.0.0.1
