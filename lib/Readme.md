@@ -16,7 +16,8 @@ ctx.state.yugReqUrls = [
       'path': 'path',
       'host': 'host',
       'charset': 'charset',
-      'headers', ''
+      'headers': '',
+      'rawbody': ''
     },
     'res': {
       'header': 'header',
@@ -26,9 +27,16 @@ ctx.state.yugReqUrls = [
 ]
 
 // Temporary version of response.
-// Because yugServer extension middlewares may overwrite it before it is sent to the client.
+// yugServer extension middlewares may overwrite it before it is sent to client.
+// yugServer base middleware (init) will finally send it to client.
 ctx.state.yugPreRes = {
   'header': 'header',
   'body': 'body'
 }
+```
+
+## 中间件处理流程
+```
+forward:  init -> combo -> rewrite -> process
+backward: init <- combo <- rewrite <- process
 ```

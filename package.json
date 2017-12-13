@@ -17,10 +17,12 @@
   ],
   "preferGlobal": true,
   "dependencies": {
+    "content-type": "^1.0.4",
     "handlebars": "^4.0.10",
     "koa": "^2.2.0",
     "mime": "^1.3.4",
     "nopt": "^3.0.6",
+    "raw-body": "^2.3.2",
     "request": "^2.81.0",
     "shelljs": "^0.5.3",
     "util": "^0.10.3"
