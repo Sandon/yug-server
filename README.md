@@ -26,23 +26,29 @@ config content as :
         'rewrite'
       ],
       hosts: {
-        // simple host
+        // simple host static files under ${root}
         'www.demo.com': {
           root: '/Users/Sandon/WebstormProjects/'
         },
     
-        // rewrite
+        // rewrite to file system or remote server.
+        // first match of rewrite rules in ${rewrite} that return 200 will be used,
+        // so the order of the rules in ${rewrite} matter.
         'www.styledemo.com': {
           root: '/Users/Sandon/WebstormProjects/',
           rewrite: [
+            // rewrite to file system under the ${root}
+            // in this configuration, it is '/Users/Sandon/WebstormProjects/mine/yug-server/test/$1'
             {
               from: /^\/yugserverrewrite\/(.*)$/,
               to: 'mine/yug-server/test/$1'
             },
+            // rewrite to remote server
             {
               from: /^\/yugserverrewritehttp\/(.*)$/,
               to: 'http://www.demo.com/mine/yug-server/test/$1'
             },
+            // also rewrite to remote server
             {
               from: '^(.*)$',
               to: 'http://42.156.140.62$1'
