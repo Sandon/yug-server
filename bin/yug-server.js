@@ -64,15 +64,13 @@ if (parsed.version) {
 }
 
 /* 2. run the servers */
-var Cluster = {
+const master = {
   start: function() {
     this._start()
     this._watch()
   },
   
   _start: function () {
-    console.log( 'pid is ->', PID )
-    
     for ( var id in cluster.workers ) {
       cluster.workers[id].kill()
     }
@@ -82,9 +80,11 @@ var Cluster = {
     for (var i = 0; i < count; i++) {
       cluster.fork()
     }
-    
+
+    console.log('yug server start successfully, pid is:', PID)
+
     cluster.on( 'exit', function ( worker ) {
-      util.log( 'worker ' + worker.process.pid + ' died' )
+      // util.log( 'worker ' + worker.process.pid + ' died' )
     })
   },
   
@@ -98,6 +98,7 @@ var Cluster = {
     const watcher = fs.watch(configFile)
     watcher.on('change', function () {
       utils.schedule( 'start-cluster', function () {
+        console.log('config file is changed, restart the server...')
         self._start()
       }, 2000)
     })
@@ -105,7 +106,7 @@ var Cluster = {
   
 }
 
-var Server = {
+const worker = {
   start: function() {
     const config = require(configFile)
     config.port = parsed.port || config.port
@@ -141,13 +142,13 @@ if (cluster.isMaster) {
 }
 
 if (!debug && cluster.isMaster) {
-  Cluster.start()
+  master.start()
 } else {
-  Server.start()
+  worker.start()
 }
 
 process.on('SIGTERM', function () {
   console.log('sigterm ...')
-  process.exit(0);
+  process.exit(0)
 })
 
