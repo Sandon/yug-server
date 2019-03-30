@@ -109,6 +109,7 @@ const master = {
 const worker = {
   start: function() {
     const config = require(configFile)
+    config.__configFile = configFile
     config.port = parsed.port || config.port
     config.debug = debug || config.debug
     
