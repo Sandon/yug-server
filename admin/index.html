@@ -8,7 +8,8 @@
 <body>
 
 <h2>Yug Server config</h2>
-<div id="container" style="width:800px;height:600px;border:1px solid grey"></div>
+<div id="container" style="width:100%;height:600px;border:1px solid grey"></div>
+<button id="save">保存</button>
 
 <script>var require = { paths: { 'vs': './assets/monaco-editor/min/vs' } };</script>
 <script src="./assets/monaco-editor/min/vs/loader.js"></script>
@@ -16,14 +17,36 @@
 <script src="./assets/monaco-editor/min/vs/editor/editor.main.js"></script>
 
 <script>
-  var editor = monaco.editor.create(document.getElementById('container'), {
-    value: [
-      'function x() {',
-      '\tconsole.log("Hello world!");',
-      '}'
-    ].join('\n'),
-    language: 'javascript'
-  });
+  let editor
+  if (window.fetch) {
+    window.fetch('/getConfig')
+    .then(res => res.json())
+    .then((res) => {
+      if (!res.success) {
+        alert(res.errMsg || '请求错误')
+        return
+      }
+      editor = monaco.editor.create(document.getElementById('container'), {
+        value: res.content,
+        language: 'javascript',
+        theme: 'vs-dark',
+        fontSize: '14px'
+      })
+      // editor.onDidChangeModelContent((event) => {
+      //   console.log(event)
+      // })
+    })
+  }
+  document.getElementById('save').addEventListener('click', function () {
+    if (!editor) {
+      return
+    }
+    console.log(editor.getValue())
+    window.fetch('/setConfig', {
+      method: 'post',
+      body: JSON.stringify({content: editor.getValue()})
+    })
+  })
 </script>
 
 </body>

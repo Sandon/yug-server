@@ -52,7 +52,6 @@ async function getAssets (ctx, next) {
 function getConfigFile (config) {
   return async function (ctx, next) {
     const content = await readFile(config.__configFile, 'utf-8')
-    // await writeFile(config.__configFile, content)
     ctx.body = {
       success: true,
       content
@@ -63,19 +62,10 @@ function getConfigFile (config) {
 function setConfigFile (config) {
   return async function (ctx, next) {
     const str = ctx.request.rawBody.toString()
-    const body = {}
-    str.split('&').forEach((pair) => {
-      if (pair) {
-        const keyValue = pair.split('=')
-        if (keyValue.length === 2) {
-          body[keyValue[0]] = keyValue[1]
-        }
-      }
-    })
+    const body = JSON.parse(str)
 
     if (body['content']) {
-      // console.log(decodeURIComponent(body['content']))
-      await writeFile(config.__configFile, decodeURIComponent(body['content']))
+      await writeFile(config.__configFile, body['content'])
       ctx.body = {
         success: true,
         content: ''
