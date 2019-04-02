@@ -7,6 +7,7 @@ const cluster = require('cluster')
 const shell = require('shelljs')
 const utils = require('../lib/utils')
 const nopt = require('nopt')
+const chokidar = require('chokidar')
 
 const packageInfo = require('../package.json')
 const CONFIG_DIR = 'yug-config'
@@ -71,13 +72,13 @@ const master = {
   },
   
   _start: function () {
-    for ( var id in cluster.workers ) {
+    for ( let id in cluster.workers ) {
       cluster.workers[id].kill()
     }
     
     const os = require( 'os' )
     const count = os.cpus().length
-    for (var i = 0; i < count; i++) {
+    for (let i = 0; i < count; i++) {
       cluster.fork()
     }
 
@@ -87,23 +88,33 @@ const master = {
       // util.log( 'worker ' + worker.process.pid + ' died' )
     })
   },
-  
+
   _watch: function () {
     let self = this
-    
+
     if (!fs.existsSync(configFile)) {
       throw new Error( `config file '${configFile}' does not exist` )
     }
-    
-    const watcher = fs.watch(configFile)
+
+    const watcher = chokidar.watch(configFile, {
+      ignored: /(^|[\/\\])\../,
+      persistent: true
+    })
     watcher.on('change', function () {
+      console.log('config file is changed')
       utils.schedule( 'start-cluster', function () {
         console.log('config file is changed, restart the server...')
         self._start()
-      }, 2000)
+      }, 1000)
     })
+
+    // fs.watchFile(configFile, function () {
+    //   utils.schedule( 'start-cluster', function () {
+    //     console.log('config file is changed, restart the server...')
+    //     self._start()
+    //   }, 1000)
+    // })
   }
-  
 }
 
 const worker = {

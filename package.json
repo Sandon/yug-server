@@ -17,6 +17,7 @@
   ],
   "preferGlobal": true,
   "dependencies": {
+    "chokidar": "^2.1.5",
     "handlebars": "^4.0.10",
     "koa": "^2.2.0",
     "koa-router": "^7.4.0",
