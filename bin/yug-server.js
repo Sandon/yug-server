@@ -101,7 +101,6 @@ const master = {
       persistent: true
     })
     watcher.on('change', function () {
-      console.log('config file is changed')
       utils.schedule( 'start-cluster', function () {
         console.log('config file is changed, restart the server...')
         self._start()
@@ -160,7 +159,8 @@ if (!debug && cluster.isMaster) {
 }
 
 process.on('SIGTERM', function () {
-  console.log('sigterm ...')
+  // if (!cluster.isMaster) {
+  //   console.log('a worker terminate')
+  // }
   process.exit(0)
 })
-
