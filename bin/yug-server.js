@@ -7,6 +7,7 @@ const cluster = require('cluster')
 const shell = require('shelljs')
 const utils = require('../lib/utils')
 const nopt = require('nopt')
+const chokidar = require('chokidar')
 
 const packageInfo = require('../package.json')
 const CONFIG_DIR = 'yug-config'
@@ -64,50 +65,61 @@ if (parsed.version) {
 }
 
 /* 2. run the servers */
-var Cluster = {
+const master = {
   start: function() {
     this._start()
     this._watch()
   },
   
   _start: function () {
-    console.log( 'pid is ->', PID )
-    
-    for ( var id in cluster.workers ) {
+    for ( let id in cluster.workers ) {
       cluster.workers[id].kill()
     }
     
     const os = require( 'os' )
     const count = os.cpus().length
-    for (var i = 0; i < count; i++) {
+    for (let i = 0; i < count; i++) {
       cluster.fork()
     }
-    
+
+    console.log('yug server start successfully, pid is:', PID)
+
     cluster.on( 'exit', function ( worker ) {
-      util.log( 'worker ' + worker.process.pid + ' died' )
+      // util.log( 'worker ' + worker.process.pid + ' died' )
     })
   },
-  
+
   _watch: function () {
     let self = this
-    
+
     if (!fs.existsSync(configFile)) {
       throw new Error( `config file '${configFile}' does not exist` )
     }
-    
-    const watcher = fs.watch(configFile)
+
+    const watcher = chokidar.watch(configFile, {
+      ignored: /(^|[\/\\])\../,
+      persistent: true
+    })
     watcher.on('change', function () {
       utils.schedule( 'start-cluster', function () {
+        console.log('config file is changed, restart the server...')
         self._start()
-      }, 2000)
+      }, 1000)
     })
+
+    // fs.watchFile(configFile, function () {
+    //   utils.schedule( 'start-cluster', function () {
+    //     console.log('config file is changed, restart the server...')
+    //     self._start()
+    //   }, 1000)
+    // })
   }
-  
 }
 
-var Server = {
+const worker = {
   start: function() {
     const config = require(configFile)
+    config.__configFile = configFile
     config.port = parsed.port || config.port
     config.debug = debug || config.debug
     
@@ -141,13 +153,14 @@ if (cluster.isMaster) {
 }
 
 if (!debug && cluster.isMaster) {
-  Cluster.start()
+  master.start()
 } else {
-  Server.start()
+  worker.start()
 }
 
 process.on('SIGTERM', function () {
-  console.log('sigterm ...')
-  process.exit(0);
+  // if (!cluster.isMaster) {
+  //   console.log('a worker terminate')
+  // }
+  process.exit(0)
 })
-

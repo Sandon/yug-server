@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
+  <link rel="stylesheet" data-name="vs/editor/editor.main" href="./assets/monaco-editor/min/vs/editor/editor.main.css">
+  <style>
+    html,body{
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
+    .wrap{
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+    .header{
+      height: 50px;
+      line-height: 50px;
+      margin: 0;
+      text-align: center;
+      flex-grow: 0;
+      flex-shrink: 0;
+    }
+    #container{
+      width:100%;
+      /*height: calc(100% - 100px);*/
+      border:1px solid grey;
+      flex-grow: 1;
+      flex-shrink: 1;
+    }
+    .footer{
+      height: 50px;
+      margin: 0;
+      text-align: center;
+      flex-grow: 0;
+      flex-shrink: 0;
+    }
+    #save{
+      height: 36px;
+      margin-top: 7px;
+      background: green;
+      color: white;
+      font-size: 16px;
+      padding: 0 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <h2 class="header">Yug Server config</h2>
+  <div id="container"></div>
+  <div class="footer">
+    <button id="save">保存</button>
+  </div>
+</div>
+
+
+<script>var require = { paths: { 'vs': './assets/monaco-editor/min/vs' } };</script>
+<script src="./assets/monaco-editor/min/vs/loader.js"></script>
+<script src="./assets/monaco-editor/min/vs/editor/editor.main.nls.js"></script>
+<script src="./assets/monaco-editor/min/vs/editor/editor.main.js"></script>
+
+<script>
+  let editor
+  if (window.fetch) {
+    window.fetch('/getConfig')
+    .then(res => res.json())
+    .then((res) => {
+      if (!res.success) {
+        alert(res.errMsg || '请求错误')
+        return
+      }
+      editor = monaco.editor.create(document.getElementById('container'), {
+        value: res.content,
+        language: 'javascript',
+        theme: 'vs-dark',
+        fontSize: '14px'
+      })
+      // editor.onDidChangeModelContent((event) => {
+      //   console.log(event)
+      // })
+    })
+  }
+  document.getElementById('save').addEventListener('click', function () {
+    if (!editor) {
+      return
+    }
+    console.log(editor.getValue())
+    window.fetch('/setConfig', {
+      method: 'post',
+      body: JSON.stringify({content: editor.getValue()})
+    })
+  })
+</script>
+
+</body>
+</html>

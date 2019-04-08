@@ -10,7 +10,9 @@ a local development server (combo and rewrite http requests to local files or re
 
 
 ## Config
-path of the config file is ` ~/yug-config/server.config.js `.
+path of the config file is ` ~/yug-config/server.config.js `.  
+or  
+you can visit 127.0.0.1 to edit config. (maybe should change port to which you use)
 
 config content as :
 
