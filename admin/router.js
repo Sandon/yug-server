@@ -26,6 +26,11 @@ module.exports = (config) => {
 }
 
 async function getAssets (ctx, next) {
+  if (ctx.request.header.host !== '127.0.0.1') {
+    await next()
+    return
+  }
+
   let filePath = './index.html'
   if (ctx.request.url !== '/') {
     filePath = `.${ctx.request.url}`
@@ -51,6 +56,10 @@ async function getAssets (ctx, next) {
 
 function getConfigFile (config) {
   return async function (ctx, next) {
+    if (ctx.request.header.host !== '127.0.0.1') {
+      await next()
+      return
+    }
     const content = await readFile(config.__configFile, 'utf-8')
     ctx.body = {
       success: true,
@@ -61,6 +70,10 @@ function getConfigFile (config) {
 
 function setConfigFile (config) {
   return async function (ctx, next) {
+    if (ctx.request.header.host !== '127.0.0.1') {
+      await next()
+      return
+    }
     const str = ctx.request.rawBody.toString()
     const body = JSON.parse(str)
 
