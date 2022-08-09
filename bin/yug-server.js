@@ -149,7 +149,7 @@ const worker = {
 
 if (cluster.isMaster) {
   PID = process.pid
-  fs.writeFileSync(serverPidFile, PID)
+  fs.writeFileSync(serverPidFile, String(PID))
 }
 
 if (!debug && cluster.isMaster) {
