@@ -17,7 +17,7 @@
   ],
   "preferGlobal": true,
   "dependencies": {
-    "chokidar": "^2.1.5",
+    "chokidar": "^3.5.3",
     "handlebars": "^4.7.7",
     "koa": "^2.13.4",
     "koa-router": "^7.4.0",
@@ -25,7 +25,7 @@
     "monaco-editor": "^0.16.2",
     "nopt": "^3.0.6",
     "raw-body": "^2.3.2",
-    "request": "^2.81.0",
+    "request": "^2.88.2",
     "shelljs": "^0.8.5",
     "util": "^0.10.3"
   },
@@ -39,7 +39,7 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "standard": "^10.0.2"
+    "standard": "^17.0.0"
   },
   "standard": {
     "ignore": [
