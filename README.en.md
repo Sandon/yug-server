@@ -1,5 +1,5 @@
 # yug-server
-a local proxy server (rewrite http requests to local files or remote servers), supports combo mode and HTTPS
+a local proxy server, rewrite http requests to local files or remote servers, support combo mode and HTTPS.
 
 ## Install
 `sudo npm install -g yug-server`

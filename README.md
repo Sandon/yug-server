@@ -1,5 +1,5 @@
 # yug-server
-一个本地代理服务 (将HTTP请求代理到本地文件或者另一个HTTP请求上，支持combo模式和HTTPS)
+一个本地代理服务，将HTTP请求代理到本地文件或者另一个HTTP请求上，支持combo模式和HTTPS。
 
 [English Readme.md](./README.en.md)
 
