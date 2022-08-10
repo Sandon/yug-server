@@ -11,7 +11,7 @@
     "lint": "./node_modules/.bin/standard"
   },
   "keywords": [
-    "server",
+    "proxy server",
     "development",
     "tool"
   ],
