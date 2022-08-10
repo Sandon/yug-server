@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-const util = require('util')
 const path = require('path')
 const fs = require('fs')
 const cluster = require('cluster')
@@ -85,7 +84,7 @@ const master = {
     console.log('yug server start successfully, pid is:', PID)
 
     cluster.on( 'exit', function ( worker ) {
-      // util.log( 'worker ' + worker.process.pid + ' died' )
+      // console.log( 'worker ' + worker.process.pid + ' died' )
     })
   },
 
@@ -137,12 +136,12 @@ const worker = {
       https.createServer(httpsOpt, app.callback())
         .listen( config.sslport || 443 )
         .on( 'error', function(e) {
-          util.error(e)
+          console.error(e)
         })
     }
     
     app.listen(config.port).on('error', function(e) {
-      util.error(e)
+      console.error(e)
     })
   }
 }
